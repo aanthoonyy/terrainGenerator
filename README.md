@@ -7,6 +7,6 @@
  - Draws isometric squares based on the value of the height map
  - Draws foliage based on chance
 
-imgs/terrainGen
+![terrain gif](imgs/terrainGen.gif)
 
 *work in progress*
