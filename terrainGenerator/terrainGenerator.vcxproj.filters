@@ -21,9 +21,18 @@
     <ClCompile Include="perlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderPerlinNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="perlinNoise.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderCube.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

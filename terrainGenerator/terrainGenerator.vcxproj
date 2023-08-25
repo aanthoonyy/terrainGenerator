@@ -141,9 +141,12 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="perlinNoise.cpp" />
+    <ClCompile Include="renderCube.cpp" />
+    <ClCompile Include="renderPerlinNoise.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="perlinNoise.hpp" />
+    <ClInclude Include="renderCube.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
