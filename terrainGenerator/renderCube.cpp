@@ -1,6 +1,8 @@
 #include "renderCube.hpp"
 #include "perlinNoise.hpp"
-
+#include <iostream>
+#include <random>
+#include <ctime>
 sf::VertexArray drawIsometricCube(float isoX, float isoY, float size, int color[])
 {
     // Define the cube's vertices in isometric coordinates
@@ -103,6 +105,18 @@ void renderMap() {
     const float isoXStart = 350.0f;
     const float isoYStart = 100.0f;
 
+    //random number gen
+    std::random_device rd;  
+    std::mt19937 gen(rd()); 
+    std::uniform_int_distribution<int> distribution(3, 6); 
+
+    int seed = static_cast<int>(std::time(nullptr));
+
+    int ran = distribution(gen);
+    seed *= ran;
+    
+
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -115,28 +129,70 @@ void renderMap() {
         window.clear();
         float isoX = 950;
         float isoY = 0;
-        int color[3] = { 16, 160, 55 };
+        int color[3] = { 66, 135, 245 };
+        
 
+        float multiplyer = 0;
+        int yAdjustment = 0;
 
-
-        for (int x = 0; x < gridSize * 4; x++)
+        // color the whole screen blue for the water
+        for (int x = 0; x < 1990; x+=5)
         {
-            for (int y = 0; y < gridSize * 8; y++)
+            for (int y = 0; y < 1080; y+=5)
             {
                 float normalizedX = (float)x / gridSize;
                 float normalizedY = (float)y / gridSize;
-                if (perlin(normalizedX, normalizedY) < 0) {
+                if (perlin(normalizedX, normalizedY, seed) > -0.35 + multiplyer) {
+
                     float offsetX = y * cubeSize * 0.25f;
                     float offsetY = x * cubeSize * 0.5f;
                     float isoPosX = isoX + offsetX - offsetY;
                     float isoPosY = isoY + offsetY + offsetX;
-
-                    window.draw(drawIsometricCube(isoPosX, isoPosY, cubeSize, color));
+                    //window.draw(drawIsometricCube(isoPosX, isoPosY - yAdjustment, cubeSize, color));
+                    window.draw(drawIsometricCube(1920 - x, 1100 - y, cubeSize, color));
                 }
 
             }
         }
 
+
+        //color[3] = { 16, 160, 55 };
+
+
+        for (int i = 0; i < 6; i++) {
+            if (i == 0) {
+                color[0] = 219;
+                color[1] = 255;
+                color[2] = 110;
+            }
+            else {
+                color[0] = 16;
+                color[1] = 160;
+                color[2] = 55;
+            }
+            for (int x = 0; x < gridSize * 4; x++)
+            {
+                for (int y = 0; y < gridSize * 8; y++)
+                {
+                    float normalizedX = (float)x / gridSize;
+                    float normalizedY = (float)y / gridSize;
+                    if (perlin(normalizedX, normalizedY, seed) > -0.35 + multiplyer) {
+
+                        float offsetX = y * cubeSize * 0.25f;
+                        float offsetY = x * cubeSize * 0.5f;
+                        float isoPosX = isoX + offsetX - offsetY;
+                        float isoPosY = isoY + offsetY + offsetX;
+                        window.draw(drawIsometricCube(isoPosX, isoPosY - yAdjustment, cubeSize, color));
+                        //window.draw(drawIsometricCube(1920, 1100, cubeSize, color));
+                    }
+
+                }
+            }
+            multiplyer += 0.2;
+            yAdjustment -= 20;
+            
+        }
+        //window.draw(drawIsometricCube(1920, 1100, cubeSize, color));
         //drawIsometricCube(isoX - 0, isoY -20, cubeSize, color); /// Every row subtract - 20 from the Y
         window.display();
     }

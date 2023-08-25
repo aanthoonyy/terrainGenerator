@@ -19,7 +19,7 @@ int main()
             float normalizedX = (float)x / GRID_SIZE;
             float normalizedY = (float)y / GRID_SIZE;
 
-            float val = perlin(normalizedX, normalizedY); 
+            float val = perlin(normalizedX, normalizedY, 999999);
 
             std::cout << "value at (" << normalizedX << ", " << normalizedY << "): " << val << std::endl;
         }
@@ -27,5 +27,6 @@ int main()
 
 
     renderMap();
+    //renderPerlin();
 }
 

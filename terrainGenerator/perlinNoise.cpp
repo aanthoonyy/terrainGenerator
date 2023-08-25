@@ -6,17 +6,18 @@
 
 float interpolate(float a0, float a1, float w) {
     // cubic interpolation method
-    return (a1 - a0) * (3.0 - w * 2.0) * w * w + a0;
+    return (a1 - a0) * (3 - w * 2.0) * w * w + a0;
 }
 
 
 
 // hashing function
-vector2 randomGradient(int ix, int iy) {
+vector2 randomGradient(int ix, int iy, int seed) {
     // No precomputed gradients mean this works for any number of grid coordinates
+    
     const unsigned w = 8 * sizeof(unsigned);
     const unsigned s = w / 2;
-    unsigned a = ix, b = iy;
+    unsigned a = ix + seed, b = iy + seed;
     a *= 3284157443;
 
     b ^= a << s | a >> w - s;
@@ -34,9 +35,9 @@ vector2 randomGradient(int ix, int iy) {
     return v;
 }
 
-float dotGridGradient(int ix, int iy, float x, float y) {
+float dotGridGradient(int ix, int iy, float x, float y, int seed) {
 	// get gradient from integer coordinates
-	vector2 gradient = randomGradient(ix, iy);
+	vector2 gradient = randomGradient(ix, iy, seed);
 
     // compute the distance vector
     float dx = x - (float)ix;
@@ -48,7 +49,7 @@ float dotGridGradient(int ix, int iy, float x, float y) {
 }
 
 
-float perlin(float x, float y) {
+float perlin(float x, float y, int seed) {
 
     // finding grid cell corner values
     int x0 = (int)x;
@@ -61,13 +62,13 @@ float perlin(float x, float y) {
     float sy = y - (float)y0;
 
     // compute and interpolate top two corners
-    float n0 = dotGridGradient(x0, y0, x, y);
-    float n1 = dotGridGradient(x1, y0, x, y);
+    float n0 = dotGridGradient(x0, y0, x, y, seed);
+    float n1 = dotGridGradient(x1, y0, x, y, seed);
     float ix0 = interpolate(n0, n1, sx);
 
     //compute and interpolate bottom two corners
-    n0 = dotGridGradient(x0, y1, x, y);
-    n1 = dotGridGradient(x1, y1, x, y);
+    n0 = dotGridGradient(x0, y1, x, y, seed);
+    n1 = dotGridGradient(x1, y1, x, y, seed);
     float ix1 = interpolate(n0, n1, sx);
 
     float value = interpolate(ix0, ix1, sy);
@@ -100,9 +101,9 @@ void renderPerlin() {
             float amp = 3;
 
             for (int i = 0; i < 12; i++) {
-                val += perlin(x * freq / GRID_SIZE, y * freq / GRID_SIZE) * amp;
+                val += perlin(x * freq / GRID_SIZE, y * freq / GRID_SIZE, 999999) * amp;
 
-                freq *= 2;
+                freq *= 1.5;
                 amp /= 2;
             }
             // contrast value
