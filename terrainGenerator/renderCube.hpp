@@ -4,3 +4,4 @@
 
 sf::VertexArray drawIsometricCube(float isoX, float isoY, float size, int color[]);
 void renderMap();
+void drawTrees(sf::RenderWindow& window, float isoX, float isoY, float treeHeight);

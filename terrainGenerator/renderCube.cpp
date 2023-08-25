@@ -109,13 +109,13 @@ void renderMap() {
     std::random_device rd;  
     std::mt19937 gen(rd()); 
     std::uniform_int_distribution<int> distribution(3, 6); 
+    std::uniform_int_distribution<int> treeDistribution(1, 100); 
 
     int seed = static_cast<int>(std::time(nullptr));
 
     int ran = distribution(gen);
     seed *= ran;
     
-
 
     while (window.isOpen())
     {
@@ -125,10 +125,10 @@ void renderMap() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
+    
         window.clear();
-        float isoX = 950;
-        float isoY = 0;
+        float isoX = 1250;
+        float isoY = -1080;
         int color[3] = { 66, 135, 245 };
         
 
@@ -156,23 +156,20 @@ void renderMap() {
         }
 
 
-        //color[3] = { 16, 160, 55 };
-
-
         for (int i = 0; i < 6; i++) {
             if (i == 0) {
                 color[0] = 219;
                 color[1] = 255;
                 color[2] = 110;
             }
-            else {
+            if(i >0 && i < 3) {
                 color[0] = 16;
                 color[1] = 160;
-                color[2] = 55;
+                color[2] = 75;
             }
-            for (int x = 0; x < gridSize * 4; x++)
+            for (int x = 0; x < gridSize * 20; x++)
             {
-                for (int y = 0; y < gridSize * 8; y++)
+                for (int y = 0; y < gridSize * 20; y++)
                 {
                     float normalizedX = (float)x / gridSize;
                     float normalizedY = (float)y / gridSize;
@@ -184,6 +181,10 @@ void renderMap() {
                         float isoPosY = isoY + offsetY + offsetX;
                         window.draw(drawIsometricCube(isoPosX, isoPosY - yAdjustment, cubeSize, color));
                         //window.draw(drawIsometricCube(1920, 1100, cubeSize, color));
+                        if (treeDistribution(gen) == 10 && i >= 3) {
+                            drawTrees(window, isoPosX, isoPosY, 100.f);
+                        }
+                        
                     }
 
                 }
@@ -198,4 +199,23 @@ void renderMap() {
     }
 
     return;
+}
+
+
+void drawTrees(sf::RenderWindow& window, float isoX, float isoY, float treeHeight) {
+    int brown[3] = { 120,84,48 };
+    int leaves[3] = { 33,69,35 };
+    window.draw(drawIsometricCube(isoX, isoY, 20, brown));
+    window.draw(drawIsometricCube(isoX, isoY -=20, 20, brown));
+    window.draw(drawIsometricCube(isoX, isoY -=20, 20, brown));
+    window.draw(drawIsometricCube(isoX, isoY -=20, 20, leaves));
+    window.draw(drawIsometricCube(isoX - 10, isoY, 20, leaves));
+    window.draw(drawIsometricCube(isoX + 10, isoY, 20, leaves));
+    window.draw(drawIsometricCube(isoX + 15, isoY - 5, 20, leaves));
+    window.draw(drawIsometricCube(isoX - 15, isoY - 5, 20, leaves));
+    window.draw(drawIsometricCube(isoX - 20, isoY - 10, 20, leaves));
+    window.draw(drawIsometricCube(isoX + 20, isoY + 10, 20, leaves));
+    window.draw(drawIsometricCube(isoX , isoY -= 20, 20, leaves));
+
+    
 }
