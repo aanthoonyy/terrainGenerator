@@ -5,7 +5,6 @@
 #include <ctime>
 sf::VertexArray drawIsometricCube(float isoX, float isoY, float size, int color[])
 {
-    // Define the cube's vertices in isometric coordinates
     sf::Vector2f vertices[8] = {
         sf::Vector2f(isoX, isoY),
         sf::Vector2f(isoX + size, isoY),
@@ -18,7 +17,6 @@ sf::VertexArray drawIsometricCube(float isoX, float isoY, float size, int color[
         sf::Vector2f(isoX - size * 0.5f, isoY - size * 1.5f)
     };
 
-    // Define the cube's faces using vertex indices
     sf::VertexArray cube(sf::Quads, 24);
     cube[0].position = vertices[0];
     cube[1].position = vertices[1];
@@ -40,26 +38,21 @@ sf::VertexArray drawIsometricCube(float isoX, float isoY, float size, int color[
     cube[14].position = vertices[4];
     cube[15].position = vertices[7];
 
-    // top of the cube
     cube[16].position = vertices[4];
     cube[17].position = vertices[5];
     cube[18].position = vertices[6];
     cube[19].position = vertices[7];
-    // bottom of cube
+
     cube[20].position = vertices[3];
     cube[21].position = vertices[2];
     cube[22].position = vertices[1];
     cube[23].position = vertices[0];
-
-    // Set cube color
 
     sf::Color topColor(color[0] * .95, color[1] * .95, color[2] * .95);
     sf::Color frontColor(color[0], color[1], color[2]);
     sf::Color sideColor(color[0] * .85, color[1] * .85, color[2] * .85);
     sf::Color alpha(150, 150, 150);
     alpha.a = 0;
-
-    // set top color
 
     cube[0].color = frontColor;
     cube[1].color = frontColor;
@@ -91,10 +84,6 @@ sf::VertexArray drawIsometricCube(float isoX, float isoY, float size, int color[
     cube[22].color = alpha;
     cube[23].color = alpha;
 
-
-
-
-    //window.draw(cube);
     return cube;
 }
 
@@ -105,7 +94,6 @@ void renderMap() {
     const float isoXStart = 350.0f;
     const float isoYStart = 100.0f;
 
-    //random number gen
     std::random_device rd;  
     std::mt19937 gen(rd()); 
     std::uniform_int_distribution<int> distribution(3, 6); 
@@ -135,7 +123,6 @@ void renderMap() {
         float multiplyer = 0;
         int yAdjustment = 0;
 
-        // color the whole screen blue for the water
         for (int x = 0; x < 1990; x+=5)
         {
             for (int y = 0; y < 1080; y+=5)
@@ -148,14 +135,12 @@ void renderMap() {
                     float offsetY = x * cubeSize * 0.5f;
                     float isoPosX = isoX + offsetX - offsetY;
                     float isoPosY = isoY + offsetY + offsetX;
-                    //window.draw(drawIsometricCube(isoPosX, isoPosY - yAdjustment, cubeSize, color));
                     window.draw(drawIsometricCube(1920 - x, 1100 - y, cubeSize, color));
                 }
 
             }
         }
-
-
+        
         for (int i = 0; i < 6; i++) {
             if (i == 0) {
                 color[0] = 219;
@@ -180,7 +165,6 @@ void renderMap() {
                         float isoPosX = isoX + offsetX - offsetY;
                         float isoPosY = isoY + offsetY + offsetX;
                         window.draw(drawIsometricCube(isoPosX, isoPosY - yAdjustment, cubeSize, color));
-                        //window.draw(drawIsometricCube(1920, 1100, cubeSize, color));
                         if (treeDistribution(gen) == 10 && i >= 3) {
                             drawTrees(window, isoPosX, isoPosY, 100.f);
                         }
@@ -193,14 +177,11 @@ void renderMap() {
             yAdjustment -= 20;
             
         }
-        //window.draw(drawIsometricCube(1920, 1100, cubeSize, color));
-        //drawIsometricCube(isoX - 0, isoY -20, cubeSize, color); /// Every row subtract - 20 from the Y
         window.display();
     }
 
     return;
 }
-
 
 void drawTrees(sf::RenderWindow& window, float isoX, float isoY, float treeHeight) {
     int brown[3] = { 120,84,48 };
@@ -216,6 +197,4 @@ void drawTrees(sf::RenderWindow& window, float isoX, float isoY, float treeHeigh
     window.draw(drawIsometricCube(isoX - 20, isoY - 10, 20, leaves));
     window.draw(drawIsometricCube(isoX + 20, isoY + 10, 20, leaves));
     window.draw(drawIsometricCube(isoX , isoY -= 20, 20, leaves));
-
-    
 }

@@ -1,19 +1,11 @@
 #include "perlinNoise.hpp"
 #include <math.h>
 
-
-
-
 float interpolate(float a0, float a1, float w) {
-    // cubic interpolation method
     return (a1 - a0) * (3 - w * 2.0) * w * w + a0;
 }
 
-
-
-// hashing function
 vector2 randomGradient(int ix, int iy, int seed) {
-    // No precomputed gradients mean this works for any number of grid coordinates
     
     const unsigned w = 8 * sizeof(unsigned);
     const unsigned s = w / 2;
@@ -25,9 +17,8 @@ vector2 randomGradient(int ix, int iy, int seed) {
 
     a ^= b << s | b >> w - s;
     a *= 2048419325;
-    float random = a * (3.14159265 / ~(~0u >> 1)); // in [0, 2*Pi]
+    float random = a * (3.14159265 / ~(~0u >> 1)); 
 
-    // Create the vector from the angle
     vector2 v;
     v.x = sin(random);
     v.y = cos(random);
@@ -36,14 +27,11 @@ vector2 randomGradient(int ix, int iy, int seed) {
 }
 
 float dotGridGradient(int ix, int iy, float x, float y, int seed) {
-	// get gradient from integer coordinates
 	vector2 gradient = randomGradient(ix, iy, seed);
 
-    // compute the distance vector
     float dx = x - (float)ix;
     float dy = y - (float)iy;
 
-    // return dot-product
     return (dx * gradient.x + dy * gradient.y);
 
 }
@@ -51,22 +39,18 @@ float dotGridGradient(int ix, int iy, float x, float y, int seed) {
 
 float perlin(float x, float y, int seed) {
 
-    // finding grid cell corner values
     int x0 = (int)x;
     int y0 = (int)y;
     int x1 = x0 + 1;
     int y1 = y0 + 1;
 
-    // compute interpolation weights
     float sx = x - (float)x0;
     float sy = y - (float)y0;
 
-    // compute and interpolate top two corners
     float n0 = dotGridGradient(x0, y0, x, y, seed);
     float n1 = dotGridGradient(x1, y0, x, y, seed);
     float ix0 = interpolate(n0, n1, sx);
 
-    //compute and interpolate bottom two corners
     n0 = dotGridGradient(x0, y1, x, y, seed);
     n1 = dotGridGradient(x1, y1, x, y, seed);
     float ix1 = interpolate(n0, n1, sx);
@@ -87,8 +71,6 @@ void renderPerlin() {
 
     const int GRID_SIZE = 16;
 
-    
-
     for (int x = 0; x < windowWidth; x++) {
 
         for (int y = 0; y < windowHeight; y++) {
@@ -106,10 +88,8 @@ void renderPerlin() {
                 freq *= 1.5;
                 amp /= 2;
             }
-            // contrast value
             val *= 1.2;
 
-            // because perlin values are usually between -1 and 1, we need to clip between those values
             if (val > 1.0f) {
                 val = 1.0f;
             }
@@ -117,10 +97,8 @@ void renderPerlin() {
                 val = -1.0f;
             }
 
-            // convert 1 to -1 into 255 to 0
             int color = (int)(((val + 1.0f) * 0.5f) * 255);
 
-            // set pixel color
             pixels[index] = color;
             pixels[index + 1] = (136, 200, 56);
             pixels[index + 2] = color;
@@ -150,6 +128,3 @@ void renderPerlin() {
         window.display();
     }
 }
-
-
-
